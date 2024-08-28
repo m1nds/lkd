@@ -13,4 +13,4 @@ namespace io {
     }
 }
 
-#endif
+#endif /* ! IO_HPP */

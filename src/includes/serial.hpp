@@ -20,4 +20,4 @@ namespace serial {
     };
 }
 
-#endif
+#endif /* SERIAL_HPP */
