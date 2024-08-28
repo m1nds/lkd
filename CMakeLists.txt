@@ -11,6 +11,8 @@ target_sources(lkd PUBLIC
     src/boot.S
     src/main.cpp
 
+    src/utils/bitmap.cpp
+
     src/gdt/gdt_load.S
     src/gdt/gdt.cpp
 )
