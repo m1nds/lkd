@@ -10,6 +10,9 @@ target_sources(lkd PUBLIC
     src/serial/serial.cpp
     src/boot.S
     src/main.cpp
+
+    src/gdt/gdt_load.S
+    src/gdt/gdt.cpp
 )
 
 target_include_directories(lkd PRIVATE "src/includes")
