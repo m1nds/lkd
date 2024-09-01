@@ -6,18 +6,22 @@
 namespace utils {
     Bitmap::Bitmap(uint8_t* bitmap, size_t size) {
         this->_bitmap = bitmap;
-        this->_size = size;
+        this->_size = size / 8;
+
+        for (size_t i = 0; i < this->_size; i++) {
+            bitmap[i] = 0xFF;
+        }
     }
 
     bool Bitmap::get_bit(uint32_t i) {
         uint32_t bitmap_index = i / 8;
         uint32_t bitmap_offset = i % 8;
 
-        if (this->_size >= bitmap_index) {
+        if (bitmap_index >= this->_size) {
             return false;
         }
 
-        if (((this->_bitmap[bitmap_index] >> bitmap_offset) & 1) == 0) {
+        if ((this->_bitmap[bitmap_index] & (1 << (7 - bitmap_offset))) == 0) {
             return false;
         }
 
@@ -28,11 +32,11 @@ namespace utils {
         uint32_t bitmap_index = i / 8;
         uint32_t bitmap_offset = i % 8;
 
-        if (this->_size >= bitmap_index) {
+        if (bitmap_index >= this->_size) {
             return false;
         }
 
-        this->_bitmap[bitmap_index] |= ((1 << 7) >> bitmap_offset);
+        this->_bitmap[bitmap_index] |= (1 << (7 - bitmap_offset));
 
         return true;
     }
@@ -41,11 +45,11 @@ namespace utils {
         uint32_t bitmap_index = i / 8;
         uint32_t bitmap_offset = i % 8;
 
-        if (this->_size >= bitmap_index) {
+        if (bitmap_index >= this->_size) {
             return false;
         }
 
-        this->_bitmap[bitmap_index] &= ~((1 << 7) >> bitmap_offset);
+        this->_bitmap[bitmap_index] &= ~(1 << (7 - bitmap_offset));
 
         return true;
     }

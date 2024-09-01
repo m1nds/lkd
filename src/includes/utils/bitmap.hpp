@@ -11,6 +11,7 @@ namespace utils {
             size_t _size;
 
         public:
+            Bitmap() {};
             Bitmap(uint8_t* bitmap, size_t size);
             bool get_bit(uint32_t i);
             bool set_bit(uint32_t i);
