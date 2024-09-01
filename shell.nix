@@ -10,5 +10,14 @@ clangStdenv.mkDerivation {
     pkgs.cmake
     pkgs.qemu
     pkgs.glibc_multi
+    pkgs.mtools
+    pkgs.grub2
+    pkgs.libisoburn
   ];
+
+  shellHook = ''
+    export CMAKE_GENERATOR=Ninja
+    export CMAKE_COLOR_DIAGNOSTICS=ON
+  '';
+
 }
