@@ -4,6 +4,9 @@ set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_LINKER} <CMAKE_CXX_LINK_FLAGS> <OBJECTS> 
 
 add_executable(lkd "")
 
+set_target_properties(lkd PROPERTIES LINK_DEPENDS ../lkd.ld)
+
+
 target_sources(lkd PUBLIC
     includes/io.hpp
     serial/serial.cpp
@@ -11,7 +14,6 @@ target_sources(lkd PUBLIC
     main.cpp
 
     utils/bitmap.cpp
-    #pmm/pmm.cpp
 
     gdt/gdt_load.S
     gdt/gdt.cpp
@@ -24,4 +26,4 @@ target_compile_options(lkd PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:-ffreestanding;-fno-exceptions;-fno-rtti;-fno-builtin;-O0>
 )
 
-target_link_options(lkd PRIVATE --target=i686-pc-none-elf -m32 -nostdlib -T lkd.ld -WL,--no-pie)
+target_link_options(lkd PRIVATE --target=i686-pc-none-elf -m32 -nostdlib -WL,--no-pie)
