@@ -10,6 +10,7 @@ namespace serial {
     class Serial {
         public:
             void init_serial();
+            ssize_t write_str(const char *buf);
             ssize_t write(const char *buf, size_t count);
             Serial() {};
         private:

@@ -1,12 +1,12 @@
 #include <io.hpp>
 #include <serial.hpp>
 #include <gdt.hpp>
+#include <multiboot.h>
 
-extern "C" void kmain() {
+extern "C" void kmain(multiboot_info_t* mbd) {
     serial::Serial s{};
-    s.write("Testing the serial!\n", 21);
 
     gdt_init();
 
-    s.write("GDT was setup!\n", 15);
+    s.write_str("[MAIN] GDT is OK\n");
 }

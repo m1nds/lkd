@@ -36,6 +36,15 @@ namespace serial {
         io::outb(COM1, ch);
     }
 
+    ssize_t Serial::write_str(const char *buf) {
+        ssize_t i = 0;
+        while (buf[i]) {
+            this->write_serial(buf[i++]);
+        }
+
+        return i;
+    }
+
     ssize_t Serial::write(const char *buf, size_t count) {
         for (size_t i = 0; i < count; i++) {
             this->write_serial(buf[i]);
