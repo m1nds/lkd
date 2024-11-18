@@ -9,4 +9,6 @@ extern "C" void kmain(multiboot_info_t* mbd) {
     gdt_init();
 
     s.write_str("[MAIN] GDT is OK\n");
+
+    s.kprintf("[KPRINTF] Testing kprintf : in your %x %d\n", 0xF4CE, 4269);
 }

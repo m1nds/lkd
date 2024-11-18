@@ -2,6 +2,7 @@
 #define SERIAL_HPP
 
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 #define COM1 0x3F8
@@ -12,10 +13,13 @@ namespace serial {
             void init_serial();
             ssize_t write_str(const char *buf);
             ssize_t write(const char *buf, size_t count);
+            void kprintf(const char *format, ...);
             Serial() {};
         private:
             int is_transmit_empty();
-            void write_serial(char ch);
+            void write_char(char ch);
+            void print_dec(uint32_t value);
+            void print_hex(uint32_t value);
 
             static bool _init;
     };
