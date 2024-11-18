@@ -9,7 +9,7 @@ namespace utils {
         this->_size = size / 8;
 
         for (size_t i = 0; i < this->_size; i++) {
-            bitmap[i] = 0xFF;
+            this->_bitmap[i] = 0x0;
         }
     }
 
@@ -21,11 +21,7 @@ namespace utils {
             return false;
         }
 
-        if ((this->_bitmap[bitmap_index] & (1 << (7 - bitmap_offset))) == 0) {
-            return false;
-        }
-
-        return true;
+        return this->_bitmap[bitmap_index] & (1 << bitmap_offset);
     }
 
     bool Bitmap::set_bit(uint32_t i) {
@@ -36,8 +32,7 @@ namespace utils {
             return false;
         }
 
-        this->_bitmap[bitmap_index] |= (1 << (7 - bitmap_offset));
-
+        this->_bitmap[bitmap_index] |= (1 << bitmap_offset);
         return true;
     }
 
@@ -49,8 +44,7 @@ namespace utils {
             return false;
         }
 
-        this->_bitmap[bitmap_index] &= ~(1 << (7 - bitmap_offset));
-
+        this->_bitmap[bitmap_index] &= ~(1 << bitmap_offset);
         return true;
     }
 }
