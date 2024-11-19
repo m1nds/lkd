@@ -21,6 +21,9 @@ stack_top:
 .type _start, @function
 _start:
     movl $stack_top, %esp
+
+    push %eax
+    push %ebx
     call kmain
 
     cli

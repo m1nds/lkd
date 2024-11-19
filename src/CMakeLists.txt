@@ -17,6 +17,8 @@ target_sources(lkd PUBLIC
 
     gdt/gdt_load.S
     gdt/gdt.cpp
+
+    pmm/pmm.cpp
 )
 
 target_include_directories(lkd PRIVATE "includes")

@@ -61,18 +61,22 @@ namespace serial {
 
     void Serial::print_hex(uint32_t value)
     {
-        uint32_t save = value;
         uint32_t digits = 0;
         static char hex[] = "0123456789ABCDEF";
 
-        while (save)
+        while (value)
         {
-            stack[stack_idx++] = save % 16;
+            stack[stack_idx++] = value % 16;
             digits++;
-            save /= 16;
+            value /= 16;
         }
 
         this->write_str("0x");
+
+        for (uint8_t i = digits; i < 8; i++) {
+            this->write_char('0');
+        }
+
         for (uint8_t i = 0; i < digits; i++)
         {
             this->write_char(hex[stack[--stack_idx]]);
@@ -81,14 +85,13 @@ namespace serial {
 
     void Serial::print_dec(uint32_t value)
     {
-        uint32_t save = value;
         uint32_t digits = 0;
 
-        while (save)
+        while (value)
         {
-            stack[stack_idx++] = save % 10;
+            stack[stack_idx++] = value % 10;
             digits++;
-            save /= 10;
+            value /= 10;
         }
 
         for (uint8_t i = 0; i < digits; i++)
