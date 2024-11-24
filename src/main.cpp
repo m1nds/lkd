@@ -17,4 +17,5 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     s.write_str("[MAIN] GDT > OK\n");
 
     pmm::PMM::getInstance().init(mbd);
+    s.write_str("[MAIN] PMM > OK\n");
 }
