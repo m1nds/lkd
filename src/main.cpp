@@ -2,6 +2,7 @@
 #include <serial.hpp>
 #include <gdt.hpp>
 #include <pmm.hpp>
+#include <idt.hpp>
 
 #include <multiboot.h>
 
@@ -18,4 +19,9 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
 
     pmm::PMM::getInstance().init(mbd);
     s.write_str("[MAIN] PMM > OK\n");
+
+    idt::idt_init();
+    s.write_str("[MAIN] IDT > OK\n");
+
+    __asm__ volatile ("int $0x3");
 }

@@ -18,6 +18,9 @@ target_sources(lkd PUBLIC
     gdt/gdt_load.S
     gdt/gdt.cpp
 
+    interrupts/handlers.cpp
+    interrupts/idt.cpp
+
     pmm/pmm.cpp
 )
 
