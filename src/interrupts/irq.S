@@ -3,35 +3,30 @@
 .macro IRQ num
 .global irq_\num
 irq_\num:
-    pushl $\num
-    pushl $\num
+    push $\num
+    push $\num
     jmp irq_common_stub
 .endm
 
 irq_common_stub:
-    pusha
-    push %ds
-    push %es
-    push %fs
-    push %gs
-
-    mov $0x10, %ax
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %fs
-    mov %ax, %gs
-    mov %esp, %eax
     push %eax
-    mov $irq_handler, %eax
-    call *%eax
+    push %ebx
+    push %ecx
+    push %ebp
+    push %edi
+    push %esi
+    push %edx
+
+    cld
+    call irq_handler
+
+    pop %edx
+    pop %esi
+    pop %edi
+    pop %ebp
+    pop %ecx
+    pop %ebx
     pop %eax
-
-    pop %gs
-    pop %fs
-    pop %es
-    pop %ds
-    popa
-
     add $8, %esp
     iret
 

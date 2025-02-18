@@ -3,43 +3,38 @@
 .macro ISR_ERR num
 .global isr_\num
 isr_\num:
-    pushl $\num
+    push $\num
     jmp isr_common_stub
 .endm
 
 .macro ISR_NO_ERR num
 .global isr_\num
 isr_\num:
-    pushl $0
-    pushl $\num
+    push $0
+    push $\num
     jmp isr_common_stub
 .endm
 
 isr_common_stub:
-    pusha
-    push %ds
-    push %es
-    push %fs
-    push %gs
-
-    mov $0x10, %ax
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %fs
-    mov %ax, %gs
-    mov %esp, %eax
     push %eax
-    mov $isr_handler, %eax
-    call *%eax
-    pop %eax
+    push %ebx
+    push %ecx
+    push %ebp
+    push %edi
+    push %esi
+    push %edx
 
-    pop %gs
-    pop %fs
-    pop %es
-    pop %ds
-    popa
+    cld
+    call isr_handler
+
+    pop %edx
+    pop %esi
+    pop %edi
+    pop %ebp
+    pop %ecx
+    pop %ebx
+    pop %eax
     add $8, %esp
-    /* Pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP */
     iret
 
 # Defining ISRs

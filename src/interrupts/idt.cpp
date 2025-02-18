@@ -2,7 +2,8 @@
 #include <stdint.h>
 
 extern "C" {
-    extern void *isr[32];
+    extern void *isr_table[32];
+    extern void *irq_table[16];
 }
 
 namespace idt {
@@ -33,7 +34,11 @@ namespace idt {
 
     void idt_init() {
         for (uint32_t i = 0; i < 32; i++) {
-            idt[i].idt_setup_entry(reinterpret_cast<uint32_t>(isr[i]), 0x08, 0x8e);
+            idt[i].idt_setup_entry(reinterpret_cast<uint32_t>(isr_table[i]), 0x08, 0x8e);
+        }
+
+        for (uint32_t i = 0; i < 16; i++) {
+            idt[i + 32].idt_setup_entry(reinterpret_cast<uint32_t>(irq_table[i]), 0x08, 0x8e);
         }
 
         for (uint32_t i = 32; i < IDT_ENTRIES; i++) {

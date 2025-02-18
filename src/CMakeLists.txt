@@ -19,6 +19,8 @@ target_sources(lkd PUBLIC
     gdt/gdt.cpp
 
     interrupts/handlers.cpp
+    interrupts/isr.S
+    interrupts/irq.S
     interrupts/idt.cpp
 
     pmm/pmm.cpp
