@@ -17,7 +17,7 @@ target_sources(bitmap_test PUBLIC
     bitmap_test.cpp
 )
 
-target_include_directories(bitmap_test PRIVATE "../src/includes")
+target_include_directories(bitmap_test PRIVATE "../src/utils/includes")
 target_link_libraries(bitmap_test PRIVATE GTest::gtest_main)
 
 include(GoogleTest)

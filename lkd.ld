@@ -1,29 +1,32 @@
-ENTRY(_start)
-SECTIONS
-{
-    . = 1M;
-    kernelStart = .;
-    .text :
-    {
-            *(.multiboot)
-            *(.text)
+ENTRY (_start)
+SECTIONS{
+    . = 0x00100000;
+    kernel_start = .;
+
+    .text :{
+        text_start = .;
+        *(.multiboot)
+        *(.text)
     }
 
-    .rodata :
-    {
-            *(.rodata)
+    .rodata ALIGN (0x1000) : {
+        *(.rodata)
     }
 
-    .data :
-    {
-            *(.data)
+    .data ALIGN (0x1000) : {
+        *(.data)
+        end_data = .;
     }
 
-    .bss :
-    {
-            *(COMMON)
-            *(.bss)
+    .bss : {
+        sbss = .;
+        *(COMMON)
+        *(.bss)
+        ebss = .;
+        bitmap_start = .;
+        /* . = . + 0x10000; 64 KiB reserved for page frame bitmap */
+        bitmap_end = .;
     }
-    kernelEnd = .;
+
+    kernel_end = .;
 }
-

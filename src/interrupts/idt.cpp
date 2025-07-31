@@ -21,7 +21,7 @@ namespace idt {
     }
 
     constexpr unsigned int IDT_ENTRIES = 256;
-    IdtEntry idt[256];
+    __attribute__((aligned(0x10))) IdtEntry idt[256];
 
     struct {
         uint16_t limit;

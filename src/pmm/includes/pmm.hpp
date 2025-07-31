@@ -2,8 +2,9 @@
 #define PMM_HPP
 
 #include <multiboot.h>
-#include <utils/bitmap.hpp>
+#include <bitmap.hpp>
 #include <stdint.h>
+
 namespace pmm {
     class PMM {
         public:

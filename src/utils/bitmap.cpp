@@ -1,4 +1,4 @@
-#include <utils/bitmap.hpp>
+#include <bitmap.hpp>
 
 #include <stddef.h>
 #include <stdint.h>
@@ -7,10 +7,6 @@ namespace utils {
     Bitmap::Bitmap(uint8_t* bitmap, size_t size) {
         this->_bitmap = bitmap;
         this->_size = size / 8;
-
-        for (size_t i = 0; i < this->_size; i++) {
-            this->_bitmap[i] = 0x0;
-        }
     }
 
     bool Bitmap::get_bit(uint32_t i) {

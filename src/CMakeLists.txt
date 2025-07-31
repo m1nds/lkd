@@ -14,6 +14,7 @@ target_sources(lkd PUBLIC
     main.cpp
 
     utils/bitmap.cpp
+    utils/string.cpp
 
     gdt/gdt_load.S
     gdt/gdt.cpp
@@ -27,8 +28,13 @@ target_sources(lkd PUBLIC
 )
 
 target_include_directories(lkd PRIVATE "includes")
+target_include_directories(lkd PRIVATE "serial/includes")
+target_include_directories(lkd PRIVATE "gdt/includes")
+target_include_directories(lkd PRIVATE "interrupts/includes")
+target_include_directories(lkd PRIVATE "pmm/includes")
+target_include_directories(lkd PRIVATE "utils/includes")
 
 target_compile_options(lkd PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX,ASM>:--target=i686-pc-none-elf;-march=i686;-m32;-nostdlibinc;-fno-stack-protector;-fno-threadsafe-statics>
+    $<$<COMPILE_LANGUAGE:CXX,ASM>:--target=i686-pc-none-elf;-march=i686;-m32;-nostdlibinc;-fno-stack-protector;-fno-threadsafe-statics;-ggdb3>
     $<$<COMPILE_LANGUAGE:CXX>:-ffreestanding;-fno-exceptions;-fno-rtti;-fno-builtin;-O0>
 )

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include <utils/bitmap.hpp>
+#include <bitmap.hpp>
 
 TEST(BitmapTests, SimpleGetBit) {
     uint8_t data;
