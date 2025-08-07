@@ -23,9 +23,6 @@ SECTIONS{
         *(COMMON)
         *(.bss)
         ebss = .;
-        bitmap_start = .;
-        /* . = . + 0x10000; 64 KiB reserved for page frame bitmap */
-        bitmap_end = .;
     }
 
     kernel_end = .;

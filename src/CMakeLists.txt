@@ -19,6 +19,8 @@ target_sources(lkd PUBLIC
     gdt/gdt_load.S
     gdt/gdt.cpp
 
+    paging/paging.cpp
+
     interrupts/handlers.cpp
     interrupts/isr.S
     interrupts/irq.S
@@ -30,6 +32,7 @@ target_sources(lkd PUBLIC
 target_include_directories(lkd PRIVATE "includes")
 target_include_directories(lkd PRIVATE "serial/includes")
 target_include_directories(lkd PRIVATE "gdt/includes")
+target_include_directories(lkd PRIVATE "paging/includes")
 target_include_directories(lkd PRIVATE "interrupts/includes")
 target_include_directories(lkd PRIVATE "pmm/includes")
 target_include_directories(lkd PRIVATE "utils/includes")

@@ -24,11 +24,11 @@ static struct {
     },
     {
         // Kernel Code Segment Descriptor
-        GDT_SEGMENT_DESCRIPTOR(0, -1, 0x9A, 0xC)
+        GDT_SEGMENT_DESCRIPTOR(0, 0xFFFFF, 0x9A, 0xC)
     },
     {
         // Kernel Data Segment Descriptor
-        GDT_SEGMENT_DESCRIPTOR(0, -1, 0x92, 0xC)
+        GDT_SEGMENT_DESCRIPTOR(0, 0xFFFFF, 0x92, 0xC)
     },
     {
         // Userland Code Segment Descriptor

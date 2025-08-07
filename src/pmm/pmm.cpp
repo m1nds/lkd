@@ -5,13 +5,10 @@
 
 extern uint32_t kernel_start;
 extern uint32_t kernel_end;
-extern uint32_t bitmap_start;
-extern uint32_t bitmap_end;
 
 namespace pmm {
 
     constexpr uint32_t FRAME_SIZE = 4096;
-    constexpr uint32_t FRAME_COUNT = 3000;
 
     PMM& PMM::getInstance() {
         static PMM instance;
@@ -25,25 +22,46 @@ namespace pmm {
             return;
         }
 
-        uint8_t* bitmap_ptr = reinterpret_cast<uint8_t*>(&bitmap_start + 1);
-        memset(bitmap_ptr, 0xFF, FRAME_COUNT / 8);
-
-        this->_bm = utils::Bitmap(bitmap_ptr, FRAME_COUNT);
-        this->_nbFrames = FRAME_COUNT;
-
         multiboot_memory_map_t* mmmt;
+        uint64_t total_mem = 0;
+
         for(int i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t))
         {
             multiboot_memory_map_t* mmmt = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
-            if(mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
-                this->set_unused(mmmt->addr_low, mmmt->len_low);
-            }
+            uint64_t map_len = (((uint64_t) mmmt->len_high) << 32) | (mmmt->len_low);
+            uint32_t map_addr = mmmt->addr_low;
+            total_mem += map_len;
 
-            s.kprintf("[MEMMAP] Start Addr: %x | Length: %x | Type: %d\n",
-                mmmt->addr_low, mmmt->len_low, mmmt->type);
+            if(mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
+                s.kprintf("[MEMMAP] Start Addr: %x | Length: %X | Type: Free Memory\n",
+                    map_addr, map_len);
+            }
+            else {
+                s.kprintf("[MEMMAP] Start Addr: %x | Length: %X | Type: Unusable Memory\n",
+                    map_addr, map_len);
+            }
         }
 
-        this->set_used((uint32_t) &kernel_start, &kernel_end - &kernel_start);
+        this->_nbFrames = total_mem / FRAME_SIZE;
+        s.kprintf("[MEMMAP] Found %d physical frames.\n", this->_nbFrames);
+
+        uint32_t kernel_end_pad = (uint32_t) &kernel_end & ~(0xFFF) + FRAME_SIZE;
+        uint8_t* bitmap_ptr = reinterpret_cast<uint8_t*>(kernel_end_pad);
+        this->_bm = utils::Bitmap(bitmap_ptr, this->_nbFrames);
+
+        memset(bitmap_ptr, 0xFF, this->_nbFrames/ 8);
+
+        for(int i = 0; i < mbd->mmap_length; i += sizeof(multiboot_memory_map_t))
+        {
+            multiboot_memory_map_t* mmmt = (multiboot_memory_map_t*) (mbd->mmap_addr + i);
+            uint64_t map_len = (((uint64_t) mmmt->len_high) << 32) | (mmmt->len_low);
+            uint32_t map_addr = mmmt->addr_low;
+            if(mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
+                this->set_unused(map_addr, map_len);
+            }
+        }
+
+        this->set_used((uint32_t) &kernel_start, kernel_end_pad - (uint32_t) &kernel_start + this->_nbFrames);
     }
 
     void PMM::set_used(uint32_t regionAddr, uint32_t regionSize) {

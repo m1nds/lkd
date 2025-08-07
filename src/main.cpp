@@ -3,18 +3,9 @@
 #include <gdt.hpp>
 #include <pmm.hpp>
 #include <idt.hpp>
+#include <paging.hpp>
 
 #include <multiboot.h>
-
-void strcpy(char* a, char* b) {
-    int i = 0;
-    while (b[i]) {
-        a[i] = b[i];
-        i++;
-    }
-
-    a[i] = '\x00';
-}
 
 extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     serial::Serial s{};
@@ -27,9 +18,12 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     gdt_init();
     s.write_str("[MAIN] GDT > OK\n");
 
-    idt::idt_init();
-    s.write_str("[MAIN] IDT > OK\n");
-
     pmm::PMM::getInstance().init(mbd);
     s.write_str("[MAIN] PMM > OK\n");
+
+    vmm::kernel_init_paging();
+    s.write_str("[MAIN] Kernel Paging > OK\n");
+
+    idt::idt_init();
+    s.write_str("[MAIN] IDT > OK\n");
 }

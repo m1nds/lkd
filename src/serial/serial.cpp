@@ -59,7 +59,7 @@ namespace serial {
         return count;
     }
 
-    void Serial::print_hex(uint32_t value)
+    void Serial::print_hex(uint64_t value, uint32_t bits)
     {
         uint32_t digits = 0;
         static char hex[] = "0123456789ABCDEF";
@@ -73,7 +73,8 @@ namespace serial {
 
         this->write_str("0x");
 
-        for (uint8_t i = digits; i < 8; i++) {
+        uint32_t len = bits / 4;
+        for (uint8_t i = digits; i < len; i++) {
             this->write_char('0');
         }
 
@@ -112,7 +113,10 @@ namespace serial {
                 this->print_dec(va_arg(args, uint32_t));
                 i++;
             } else if (format[i + 1] == 'x') {
-                this->print_hex(va_arg(args, uint32_t));
+                this->print_hex(va_arg(args, uint32_t), 32);
+                i++;
+            } else if (format[i + 1] == 'X') {
+                this->print_hex(va_arg(args, uint64_t), 64);
                 i++;
             } else {
                 this->write_str("[WARNING] Invalid printing format!\n");
