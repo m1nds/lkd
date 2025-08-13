@@ -1,6 +1,7 @@
 .extern gdtr
 
 .section .text
+.align 4
 .global gdt_load
 gdt_load:
     lgdt gdtr
