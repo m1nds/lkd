@@ -17,6 +17,7 @@ target_sources(lkd PUBLIC
     utils/string.cpp
 
     gdt/gdt_load.S
+    gdt/tss_load.S
     gdt/gdt.cpp
 
     paging/paging.cpp
