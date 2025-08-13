@@ -27,6 +27,8 @@ namespace vmm {
     };
 
     void kernel_init_paging();
+    void* get_task_pd(void* task);
+
 };
 
 #endif

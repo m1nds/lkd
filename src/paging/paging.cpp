@@ -1,6 +1,8 @@
-#include <stdint.h>
-#include <stddef.h>
 #include <new>
+
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 #include <paging.hpp>
 #include <serial.hpp>
@@ -36,8 +38,6 @@ namespace vmm {
     }
 
     void kernel_init_paging() {
-        serial::Serial s{};
-
         void* page_directory_addr = PMM::getInstance().allocate_frame();
         void* page_table_addr = PMM::getInstance().allocate_frame();
 
@@ -62,6 +62,45 @@ namespace vmm {
             : "r"(page_directory.address()), "i"(PAGING_FLAG)
             : "eax"
         );
-
     }
+
+    void task1(void)
+    {
+       serial::Serial s{};
+       char *msg = (char*) 0x40000100; /* le message sera stocké en 0x100100 */
+       msg[0] = 't';
+       msg[1] = 'a';
+       msg[2] = 's';
+       msg[3] = 'k';
+       msg[4] = '1';
+       msg[5] = '\n';
+       msg[6] = 0;
+
+       s.write_str(msg);
+       while(1);
+       return; /* never go there */
+    }
+
+    void* get_task_pd(void* task) {
+        memcpy((uint32_t*) 0x100000, task, 100);
+
+        void* page_directory_addr = PMM::getInstance().allocate_frame();
+        void* page_table_addr = PMM::getInstance().allocate_frame();
+
+        Page& page_directory = *(new (page_directory_addr) Page{});
+        Page& page_table = *(new (page_table_addr) Page{});
+
+        page_directory[0] = PageEntry(page_table.address(), 0x3);
+        for (size_t i = 1; i < 1024; i++) {
+            page_directory[i] = PageEntry(0, 0);
+        }
+
+        page_table[0] = PageEntry(0x100000, 0x7);
+        for (size_t i = 1; i < 1024; i++) {
+            page_table[i] = PageEntry(0, 0);
+        }
+
+        return page_directory_addr;
+    }
+
 };
