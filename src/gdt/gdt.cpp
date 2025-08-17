@@ -69,15 +69,22 @@ namespace gdt {
         memset(&tss, 0, sizeof(struct tss_entry));
 
         // TSS Descriptor initialization
-        gdt[5] = { GDT_SEGMENT_DESCRIPTOR(&tss, sizeof(tss) - 1, 0xE9, 0x40) };
+        gdt[5] = { GDT_SEGMENT_DESCRIPTOR(&tss, sizeof(tss) - 1, 0x89, 0x00) };
 
         s.kprintf("[GDT] Entry: GDT address : %x\n", &gdt);
 
         gdtr.limit = sizeof(gdt) - 1;
         gdtr.base = &gdt;
 
+        tss.cs = 0x0B;
+        tss.ss = 0x13;
+        tss.es = 0x13;
+        tss.ds = 0x13;
+        tss.fs = 0x13;
+        tss.gs = 0x13;
+
         tss.ss0 = 0x10;
-        tss.esp0 = stack_top;
+        tss.esp0 = (uint32_t) &stack_top;
 
         uint64_t* gdt_value_ptr = (uint64_t*) &gdt;
         s.kprintf("[GDT] Entry: NULL Descriptor : %X\n", gdt_value_ptr[0]);
