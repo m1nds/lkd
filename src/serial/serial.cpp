@@ -117,6 +117,9 @@ namespace serial {
             } else if (format[i + 1] == 'c') {
                 this->write_char(va_arg(args, unsigned char));
                 i++;
+            } else if (format[i + 1] == 's') {
+                this->write_str(va_arg(args, const char*));
+                i++;
             } else if (format[i + 1] == 'd') {
                 this->print_dec(va_arg(args, uint32_t));
                 i++;

@@ -9,7 +9,7 @@ namespace keyboard {
     constexpr uint32_t KEYBOARD_QUEUE_SIZE = 256;
     constexpr uint32_t COLUMNS = 4;
 
-    constexpr uint32_t LSHIFT = 0x21;
+    constexpr uint32_t LSHIFT = 0x2A;
     constexpr uint32_t RSHIFT = 0x36;
     constexpr uint32_t CTRL = 0x1D;
     constexpr uint32_t ALT = 0x38;
