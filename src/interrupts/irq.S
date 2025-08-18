@@ -12,18 +12,19 @@ irq_common_stub:
     push %eax
     push %ebx
     push %ecx
-    push %ebp
-    push %edi
-    push %esi
     push %edx
+    push %esp
+    push %ebp
+    push %esi
+    push %edi
 
-    cld
     call irq_handler
 
-    pop %edx
-    pop %esi
     pop %edi
+    pop %esi
     pop %ebp
+    pop %esp
+    pop %edx
     pop %ecx
     pop %ebx
     pop %eax

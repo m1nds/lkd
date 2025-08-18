@@ -88,6 +88,11 @@ namespace serial {
     {
         uint32_t digits = 0;
 
+        if (value == 0) {
+            this->write_char('0');
+            return;
+        }
+
         while (value)
         {
             stack[stack_idx++] = value % 10;

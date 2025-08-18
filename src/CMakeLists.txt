@@ -26,6 +26,9 @@ target_sources(lkd PUBLIC
     interrupts/isr.S
     interrupts/irq.S
     interrupts/idt.cpp
+    interrupts/pic.cpp
+
+    devices/timer.cpp
 
     pmm/pmm.cpp
 )
@@ -37,6 +40,7 @@ target_include_directories(lkd PRIVATE "paging/includes")
 target_include_directories(lkd PRIVATE "interrupts/includes")
 target_include_directories(lkd PRIVATE "pmm/includes")
 target_include_directories(lkd PRIVATE "utils/includes")
+target_include_directories(lkd PRIVATE "devices/includes")
 
 target_compile_options(lkd PRIVATE
     $<$<COMPILE_LANGUAGE:CXX,ASM>:--target=i686-pc-none-elf;-march=i686;-m32;-nostdlibinc;-fno-stack-protector;-fno-threadsafe-statics;-ggdb3>

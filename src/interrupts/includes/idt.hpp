@@ -1,5 +1,5 @@
-#ifndef IDT_H
-#define IDT_H
+#ifndef IDT_HPP
+#define IDT_HPP
 
 #include <stdint.h>
 namespace idt {
@@ -19,4 +19,4 @@ namespace idt {
     void idt_init();
 };
 
-#endif /* ! IDT_H */
+#endif /* ! IDT_HPP */

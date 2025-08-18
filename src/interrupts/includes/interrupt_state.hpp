@@ -4,8 +4,12 @@
 #include <stdint.h>
 
 struct interrupt_state {
-    uint32_t eax, ebx, ecx, ebp, edi, esi, edx;
-    uint32_t interrupt, error_code, eip, cs, eflags;
-} __attribute__ ((packed));
+    uint32_t edi, esi, ebp, esp_dummy, edx, ecx, ebx, eax;
+    uint32_t interrupt_number;
+    uint32_t error_code;
+    uint32_t eip;
+    uint32_t cs;
+    uint32_t eflags;
+} __attribute__((packed));
 
 #endif
