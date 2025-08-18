@@ -17,7 +17,7 @@ namespace serial {
             Serial() {};
         private:
             int is_transmit_empty();
-            void write_char(char ch);
+            void write_char(unsigned char ch);
             void print_dec(uint32_t value);
             void print_hex(uint64_t value, uint32_t bits);
 

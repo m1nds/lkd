@@ -29,6 +29,7 @@ target_sources(lkd PUBLIC
     interrupts/pic.cpp
 
     devices/timer.cpp
+    devices/keyboard.cpp
 
     pmm/pmm.cpp
 )

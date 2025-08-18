@@ -6,6 +6,7 @@
 #include <idt.hpp>
 #include <paging.hpp>
 #include <timer.hpp>
+#include <keyboard.hpp>
 
 #include <multiboot.h>
 
@@ -28,6 +29,9 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
 
     timer::PIT timer_pit{1000};
     s.write_str("[MAIN] Timer (PIT) > OK\n");
+
+    keyboard::Keyboard keyboard{};
+    s.write_str("[MAIN] Keyboard > OK\n");
 
     //vmm::kernel_init_paging();
     //s.write_str("[MAIN] Kernel Paging > OK\n");

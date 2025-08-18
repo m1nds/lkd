@@ -31,7 +31,7 @@ namespace serial {
         return io::inb(COM1 + 5) & 0x20;
     }
 
-    void Serial::write_char(char ch) {
+    void Serial::write_char(unsigned char ch) {
         if (!_init) {
             this->init_serial();
             _init = true;
@@ -114,6 +114,9 @@ namespace serial {
         while (format[i]) {
             if (format[i] != '%') {
                 this->write_char(format[i]);
+            } else if (format[i + 1] == 'c') {
+                this->write_char(va_arg(args, unsigned char));
+                i++;
             } else if (format[i + 1] == 'd') {
                 this->print_dec(va_arg(args, uint32_t));
                 i++;

@@ -1,5 +1,6 @@
 #include <serial.hpp>
 #include <timer.hpp>
+#include <keyboard.hpp>
 #include <pic.hpp>
 #include <interrupt_state.hpp>
 
@@ -16,6 +17,9 @@ extern "C" void irq_handler(struct interrupt_state state) {
     switch (int_num) {
         case 0:
             timer::PIT::pit_interrupt_handler();
+            break;
+        case 1:
+            keyboard::Keyboard::keyboard_interrupt_handler();
             break;
         default:
             break;
