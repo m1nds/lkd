@@ -23,11 +23,11 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     idt::idt_init();
     s.write_str("[MAIN] IDT > OK\n");
 
+    pmm::PMM::getInstance().init(mbd);
+    s.write_str("[MAIN] PMM > OK\n");
+
     timer::PIT timer_pit{1000};
     s.write_str("[MAIN] Timer (PIT) > OK\n");
-
-    //pmm::PMM::getInstance().init(mbd);
-    //s.write_str("[MAIN] PMM > OK\n");
 
     //vmm::kernel_init_paging();
     //s.write_str("[MAIN] Kernel Paging > OK\n");
