@@ -1,28 +1,38 @@
 ENTRY (_start)
-SECTIONS{
+
+SECTIONS
+{
     . = 0x00100000;
+
+    .multiboot.data : {
+        *(.multiboot.data)
+    }
+
+    .multiboot.text : {
+        *(.multiboot.text)
+    }
+
+    . += 0xC0000000;
+
     kernel_start = .;
 
-    .text :{
-        text_start = .;
-        *(.multiboot)
+    .text ALIGN (4K) : AT (ADDR (.text) - 0xC0000000) {
         *(.text)
     }
 
-    .rodata ALIGN (0x1000) : {
+    .rodata ALIGN (4K) : AT (ADDR (.rodata) - 0xC0000000) {
         *(.rodata)
+        *(.rodata.*)
     }
 
-    .data ALIGN (0x1000) : {
+    .data ALIGN (4K) : AT (ADDR (.data) - 0xC0000000) {
         *(.data)
-        end_data = .;
     }
 
-    .bss : {
-        sbss = .;
+    .bss ALIGN (4K) : AT (ADDR (.bss) - 0xC0000000) {
         *(COMMON)
         *(.bss)
-        ebss = .;
+        *(.bootstrap_stack)
     }
 
     kernel_end = .;

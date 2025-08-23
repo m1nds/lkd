@@ -16,7 +16,6 @@ namespace timer {
     constexpr uint32_t PIT_DATA_CH2 = 0x42;
 
     void PIT::pit_interrupt_handler() {
-        serial::Serial s{};
         PIT::_ticks += 1;
     }
 

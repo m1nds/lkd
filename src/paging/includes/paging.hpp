@@ -18,9 +18,12 @@ namespace vmm {
 
     class Page {
         public:
+            static Page& get_current_pd();
+
+            void map_page(uint32_t phys_addr, uint32_t virt_addr, uint32_t flags);
             PageEntry& operator[](size_t index);
             const PageEntry& operator[](size_t index) const;
-            uint32_t address() const;
+            uint32_t* address();
 
         private:
             PageEntry _entries[1024];

@@ -32,7 +32,4 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
 
     keyboard::Keyboard keyboard{};
     s.write_str("[MAIN] Keyboard > OK\n");
-
-    //vmm::kernel_init_paging();
-    //s.write_str("[MAIN] Kernel Paging > OK\n");
 }

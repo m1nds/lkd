@@ -114,7 +114,7 @@ namespace keyboard {
     };
 
 
-    static uint32_t special_keys[256] = {
+    static uint8_t special_keys[256] = {
         [LSHIFT] = 1,
         [RSHIFT] = 1,
         [CTRL] = 2,
@@ -122,9 +122,10 @@ namespace keyboard {
     };
 
     bool Keyboard::_init = false;
-    uint32_t Keyboard::_idx;
-    uint32_t Keyboard::_read;
-    uint32_t Keyboard::_column;
+    uint32_t Keyboard::_idx = 0;
+    uint32_t Keyboard::_read = 0;
+    uint32_t Keyboard::_column = 0;
+
     unsigned char Keyboard::_queue[KEYBOARD_QUEUE_SIZE];
 
     Keyboard::Keyboard() {
@@ -178,7 +179,7 @@ namespace keyboard {
 
         if (scancode < 0x80) {
 
-            if (Keyboard::_idx == KEYBOARD_QUEUE_SIZE) {
+            if (Keyboard::_idx >= KEYBOARD_QUEUE_SIZE) {
                 keyboard_flush();
             }
 
@@ -186,7 +187,7 @@ namespace keyboard {
         }
     }
 
-    unsigned char Keyboard::keyboard_getchar() {
+    unsigned char Keyboard::getchar() {
         while (Keyboard::_read == Keyboard::_idx);
         return Keyboard::_queue[Keyboard::_read++];
     }

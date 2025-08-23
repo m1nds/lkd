@@ -18,7 +18,7 @@ namespace keyboard {
         public:
             Keyboard();
             static void keyboard_interrupt_handler();
-            static unsigned char keyboard_getchar();
+            static unsigned char getchar();
 
         private:
             static bool process_special(unsigned char scancode);
@@ -33,4 +33,4 @@ namespace keyboard {
 };
 
 
-#endif /* TIMER_HPP */
+#endif /* KEYBOARD_HPP */
