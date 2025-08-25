@@ -114,6 +114,9 @@ namespace serial {
         while (format[i]) {
             if (format[i] != '%') {
                 this->write_char(format[i]);
+            } else if (format[i + 1] == '%') {
+                this->write_char('%');
+                i++;
             } else if (format[i + 1] == 'c') {
                 this->write_char(va_arg(args, unsigned char));
                 i++;

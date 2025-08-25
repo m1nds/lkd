@@ -25,7 +25,9 @@ isr_common_stub:
     push %esi
     push %edi
 
+    push %esp
     call isr_handler
+    add $4, %esp
 
     pop %edi
     pop %esi
@@ -71,6 +73,7 @@ ISR_NO_ERR 28
 ISR_NO_ERR 29
 ISR_ERR 30
 ISR_NO_ERR 31
+ISR_NO_ERR 128
 
 .global isr_table
 isr_table:

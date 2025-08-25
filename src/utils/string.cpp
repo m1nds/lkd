@@ -19,3 +19,21 @@ extern "C" void memset(void *dst, uint8_t val, size_t size) {
         c_dst[i] = val;
     }
 }
+
+extern "C" void *memmove(void *dst, const void *src, size_t size)
+{
+   unsigned char *c_dst = (unsigned char *) dst;
+   const unsigned char *c_src = (const unsigned char *) src;
+
+   if(dst < src) {
+      for(size_t i = 0; i < size; i++) {
+         c_dst[i] = c_src[i];
+      }
+   } else {
+      for(size_t i = size; i != 0; i--) {
+         c_dst[i - 1] = c_src[i - 1];
+      }
+   }
+
+   return dst;
+}

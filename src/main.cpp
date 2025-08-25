@@ -1,7 +1,9 @@
 #include <io.hpp>
 #include <vga.hpp>
+#include <utils.hpp>
 #include <serial.hpp>
 #include <gdt.hpp>
+#include <string.h>
 #include <pic.hpp>
 #include <pmm.hpp>
 #include <idt.hpp>
@@ -40,9 +42,12 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     s.write_str("[MAIN] Keyboard > OK\n");
     v.write_str("[MAIN] Keyboard > OK\n");
 
-    for (;;) {
-        unsigned char curr = keyboard::Keyboard::getchar();
-        s.kprintf("[KEYBOARD] You pressed '%c'.\n", curr);
-        v.kprintf("[KEYBOARD] You pressed '%c'.\n", curr);
+    __asm__ volatile ("mov $0, %eax");
+    __asm__ volatile ("int $0x80");
+    __asm__ volatile ("int $0x80");
+    __asm__ volatile ("int $0x80");
+
+    while (true) {
+        s.kprintf("[KEYBOARD] Write '%c'\n", keyboard::Keyboard::getchar());
     }
 }

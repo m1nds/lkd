@@ -18,7 +18,9 @@ irq_common_stub:
     push %esi
     push %edi
 
+    push %esp
     call irq_handler
+    add $4, %esp
 
     pop %edi
     pop %esi

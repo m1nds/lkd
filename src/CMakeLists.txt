@@ -33,6 +33,8 @@ target_sources(lkd PUBLIC
     devices/timer.cpp
     devices/keyboard.cpp
 
+    userland/syscalls.cpp
+
     pmm/pmm.cpp
 )
 
@@ -45,6 +47,7 @@ target_include_directories(lkd PRIVATE
     pmm/includes
     utils/includes
     devices/includes
+    userland/includes
 )
 
 target_compile_options(lkd PRIVATE

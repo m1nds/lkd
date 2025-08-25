@@ -10,6 +10,9 @@ struct interrupt_state {
     uint32_t eip;
     uint32_t cs;
     uint32_t eflags;
+
+    uint32_t user_esp;
+    uint32_t user_ss;
 } __attribute__((packed));
 
 #endif

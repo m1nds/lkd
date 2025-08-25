@@ -8,6 +8,7 @@
 extern "C" {
     extern void *isr_table[32];
     extern void *irq_table[16];
+    extern void *isr_128;
 }
 
 namespace idt {
@@ -44,6 +45,8 @@ namespace idt {
         for (uint32_t i = 0; i < 32; i++) {
             idt[i].idt_setup_entry(reinterpret_cast<uint32_t>(isr_table[i]), 0x08, 0x8e);
         }
+
+        idt[0x80].idt_setup_entry(reinterpret_cast<uint32_t>(&isr_128), 0x08, 0x8e);
 
         pic::PIC pic{};
         s.write_str("[MAIN] PIC > OK\n");

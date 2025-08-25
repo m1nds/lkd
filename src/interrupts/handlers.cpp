@@ -1,19 +1,28 @@
 #include <serial.hpp>
+#include <string.h>
 #include <timer.hpp>
 #include <keyboard.hpp>
 #include <pic.hpp>
+#include <syscalls.hpp>
 #include <interrupt_state.hpp>
 
-extern "C" void isr_handler(struct interrupt_state state) {
+extern "C" void isr_handler(struct interrupt_state* state) {
     serial::Serial s{};
 
-    uint32_t int_num = state.interrupt_number;
-    s.kprintf("ISR int: %d\n", int_num);
-
+    uint32_t int_num = state->interrupt_number;
+    if (int_num == 0x80) {
+        s.kprintf("[SYSCALLS] Triggerring a syscall, %%eax = %d\n", state->eax);
+        syscalls::syscall_handler(state);
+    } else if (int_num == 14) {
+        s.kprintf("[ERROR] Page fault\n");
+        s.kprintf("[ERROR] %%eip = %x\n", state->eip);
+        s.kprintf("[ERROR] %%ebp = %x\n", state->ebp);
+        for (;;);
+    }
 }
 
-extern "C" void irq_handler(struct interrupt_state state) {
-    uint32_t int_num = state.interrupt_number;
+extern "C" void irq_handler(struct interrupt_state* state) {
+    uint32_t int_num = state->interrupt_number;
     switch (int_num) {
         case 0:
             timer::PIT::pit_interrupt_handler();
