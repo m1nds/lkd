@@ -11,6 +11,7 @@ namespace vmm {
             PageEntry(uint32_t value, uint16_t flags);
             void set_flags(uint16_t flags);
             void set_value(uint32_t value);
+            uint32_t value();
 
         private:
             uint32_t _value;

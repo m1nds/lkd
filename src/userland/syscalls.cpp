@@ -5,7 +5,7 @@ namespace syscalls {
 
     int syscall_test() {
         serial::Serial s{};
-        s.write_str("DUMMY SYSCALL] This is a dummy syscall.\n");
+        s.write_str("[DUMMY SYSCALL] This is a dummy syscall.\n");
         return 0;
     }
 

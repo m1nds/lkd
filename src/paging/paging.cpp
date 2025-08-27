@@ -16,6 +16,10 @@ namespace vmm {
         this->_value = (value & ~(0xFFF)) | (flags & 0xFFF);
     };
 
+    uint32_t PageEntry::value() {
+        return this->_value;
+    }
+
     void PageEntry::set_value(uint32_t value) {
         this->_value |= (value & ~(0xFFF));
     }
@@ -45,16 +49,21 @@ namespace vmm {
     }
 
     void Page::map_page(uint32_t phys_addr, uint32_t virt_addr, uint32_t flags) {
-        uint32_t* pd = this->address();
-
-        pd = reinterpret_cast<uint32_t*>(P2V(pd));
+        Page& pd = *(reinterpret_cast<Page*>(P2V(this->address())));
 
         uint32_t pd_idx = (virt_addr >> 22) & 0x3FF;
         uint32_t pt_idx = (virt_addr >> 12) & 0x3FF;
 
-        uint32_t *pt = reinterpret_cast<uint32_t*>(P2V(pd[pd_idx] & ~(0xFFF)));
+        PageEntry& pd_entry = pd[pd_idx];
+        if (! (pd_entry.value() & 0x1)) {
+            Page& new_page = *(reinterpret_cast<Page*>(P2V(pmm::PMM::getInstance().allocate_frame())));
+            memset(&new_page, 0, 0x1000);
 
-        pt[pt_idx] = (phys_addr & ~(0xFFF)) | (flags & 0xFFF);
+            pd[pd_idx] = PageEntry(reinterpret_cast<uint32_t>(V2P(&new_page)), 0x3);
+        }
+
+        Page& pt = *(reinterpret_cast<Page*>(P2V(pd_entry.value() & ~(0xFFF))));
+        pt[pt_idx] = PageEntry(phys_addr, flags);
 
         __asm__ volatile("invlpg (%0)" ::"r"(virt_addr) : "memory");
     }
