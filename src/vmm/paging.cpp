@@ -56,7 +56,7 @@ namespace vmm {
 
         PageEntry& pd_entry = pd[pd_idx];
         if (! (pd_entry.value() & 0x1)) {
-            Page& new_page = *(reinterpret_cast<Page*>(P2V(pmm::PMM::getInstance().allocate_frame())));
+            Page& new_page = *(reinterpret_cast<Page*>(pmm::PMM::getInstance().allocate_frame()));
             memset(&new_page, 0, 0x1000);
 
             pd[pd_idx] = PageEntry(reinterpret_cast<uint32_t>(V2P(&new_page)), 0x3);

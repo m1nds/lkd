@@ -13,6 +13,10 @@ namespace utils {
         public:
             Bitmap() {};
             Bitmap(uint8_t* bitmap, size_t size);
+            int set_first_free();
+            size_t size() const;
+            const uint8_t* ptr() const;
+            bool is_empty() const;
             bool get_bit(uint32_t i);
             bool set_bit(uint32_t i);
             bool clear_bit(uint32_t i);

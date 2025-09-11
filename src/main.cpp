@@ -12,6 +12,7 @@
 #include <keyboard.hpp>
 
 #include <multiboot.h>
+#include <kmalloc.hpp>
 
 extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     serial::Serial s{};
@@ -41,11 +42,6 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     keyboard::Keyboard keyboard{};
     s.write_str("[MAIN] Keyboard > OK\n");
     v.write_str("[MAIN] Keyboard > OK\n");
-
-    __asm__ volatile ("mov $0, %eax");
-    __asm__ volatile ("int $0x80");
-    __asm__ volatile ("int $0x80");
-    __asm__ volatile ("int $0x80");
 
     while (true) {
         s.kprintf("[KEYBOARD] Write '%c'\n", keyboard::Keyboard::getchar());

@@ -10,8 +10,8 @@ set_target_properties(lkd PROPERTIES LINK_DEPENDS ../lkd.ld)
 
 target_sources(lkd PUBLIC
     includes/io.hpp
-    serial/serial.cpp
-    serial/vga.cpp
+    outputs/serial.cpp
+    outputs/vga.cpp
     boot.S
     main.cpp
 
@@ -22,7 +22,10 @@ target_sources(lkd PUBLIC
     gdt/tss_load.S
     gdt/gdt.cpp
 
-    paging/paging.cpp
+    vmm/paging.cpp
+    vmm/kmalloc.cpp
+    vmm/kmalloc_utils.cpp
+    vmm/bucket.cpp
 
     interrupts/handlers.cpp
     interrupts/isr.S
@@ -40,9 +43,9 @@ target_sources(lkd PUBLIC
 
 target_include_directories(lkd PRIVATE
     includes
-    serial/includes
+    outputs/includes
     gdt/includes
-    paging/includes
+    vmm/includes
     interrupts/includes
     pmm/includes
     utils/includes

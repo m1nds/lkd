@@ -114,7 +114,7 @@ namespace pmm {
         for (uint32_t i = 1; i < this->_nbFrames; i++) {
             if (!this->_bm.get_bit(i)) {
                 this->_bm.set_bit(i);
-                return reinterpret_cast<void*>(i * FRAME_SIZE);
+                return reinterpret_cast<void*>(P2V(i * FRAME_SIZE));
             }
         }
         return nullptr;
@@ -123,7 +123,7 @@ namespace pmm {
     void PMM::free_frame(void* addr) {
         if (addr == nullptr) return;
 
-        uint32_t frame = reinterpret_cast<uint32_t>(addr) / FRAME_SIZE;
+        uint32_t frame = reinterpret_cast<uint32_t>(V2P(addr)) / FRAME_SIZE;
         if (frame >= _nbFrames) return;
 
         this->_bm.clear_bit(frame);
