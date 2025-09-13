@@ -22,11 +22,14 @@ Bucket* Bucket::allocate_bucket(size_t size)
     out->size = new_size;
     out->next = nullptr;
 
-    uint8_t *bm_ptr = reinterpret_cast<uint8_t*>(out) + sizeof(Bucket);
-    size_t bm_size = bitmap_size(new_size, out->power_size) + 1;
+    int slots = bitmap_size(new_size, out->power_size);
+    if (slots < 1) slots = 1;
 
-    out->bitmap = utils::Bitmap(bm_ptr, bm_size);
-    memset(bm_ptr, 0, bm_size / 8 + 1);
+    uint8_t *bm_ptr = reinterpret_cast<uint8_t*>(out) + sizeof(Bucket);
+    size_t bm_bytes = (slots + 7) / 8;
+
+    out->bitmap = utils::Bitmap(bm_ptr, slots);
+    memset(bm_ptr, 0, bm_bytes);
 
     return out;
 }

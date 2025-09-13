@@ -1,6 +1,7 @@
 #include <io.hpp>
 #include <vga.hpp>
 #include <utils.hpp>
+#include <tar.hpp>
 #include <serial.hpp>
 #include <gdt.hpp>
 #include <string.h>
@@ -13,6 +14,23 @@
 
 #include <multiboot.h>
 #include <kmalloc.hpp>
+
+void load_initrd(multiboot_info_t* mbd) {
+    serial::Serial s{};
+
+    multiboot_module_t* mods = reinterpret_cast<multiboot_module_t*>(P2V(mbd->mods_addr));
+    uint32_t start = P2V(mods->mod_start);
+
+    vmm::Page& pd = vmm::Page::get_current_pd();
+    pd.map_page(V2P(start), start, 0x3);
+
+    utils::Tar* tar = utils::parse_tar(start);
+    while (tar != nullptr) {
+        s.kprintf("File: %s\n", tar->header.filename);
+        s.kprintf("Content: %s\n", tar->data);
+        tar = tar->next;
+    }
+}
 
 extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     serial::Serial s{};
@@ -42,6 +60,8 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     keyboard::Keyboard keyboard{};
     s.write_str("[MAIN] Keyboard > OK\n");
     v.write_str("[MAIN] Keyboard > OK\n");
+
+    load_initrd(mbd);
 
     while (true) {
         s.kprintf("[KEYBOARD] Write '%c'\n", keyboard::Keyboard::getchar());

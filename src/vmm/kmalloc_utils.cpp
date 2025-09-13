@@ -32,7 +32,7 @@ size_t align(size_t size, size_t align)
 
 void *bitmap_offset(Bucket* b, int i)
 {
-    size_t value = (size_t)b->bitmap.ptr() + (b->bitmap.size()/ 8);
+    size_t value = (size_t)b->bitmap.ptr() + ((b->bitmap.size() + 7) / 8);
     return (void *)(align(value, sizeof(long double)) + (i * b->power_size));
 }
 
@@ -41,18 +41,19 @@ void *page_begin(void *ptr, size_t page_size)
     size_t s = page_size - 1;
     uint8_t *p = reinterpret_cast<uint8_t*>(ptr);
 
-    void *out = p - ((size_t)p & s);
+    void *out = p - ((size_t) p & s);
 
     return out;
 }
 
 int bitmap_size(size_t size, size_t power_two)
 {
-    size_t value = (size - sizeof(Bucket)) / power_two;
-    if (value == 0)
+    size_t slots = (size - sizeof(Bucket)) / power_two;
+    if (slots == 0)
     {
         return 1;
     }
 
-    return value - (value / 8 + 1);
+    return (int) slots;
 }
+

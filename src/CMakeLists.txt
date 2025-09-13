@@ -17,6 +17,7 @@ target_sources(lkd PUBLIC
 
     utils/bitmap.cpp
     utils/string.cpp
+    utils/tar.cpp
 
     gdt/gdt_load.S
     gdt/tss_load.S
