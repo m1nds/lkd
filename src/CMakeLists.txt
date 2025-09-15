@@ -34,6 +34,8 @@ target_sources(lkd PUBLIC
     interrupts/idt.cpp
     interrupts/pic.cpp
 
+    loader/loader.cpp
+
     devices/timer.cpp
     devices/keyboard.cpp
 
@@ -49,6 +51,7 @@ target_include_directories(lkd PRIVATE
     vmm/includes
     interrupts/includes
     pmm/includes
+    loader/includes
     utils/includes
     devices/includes
     userland/includes

@@ -11,6 +11,7 @@
 #include <paging.hpp>
 #include <timer.hpp>
 #include <keyboard.hpp>
+#include <loader.hpp>
 
 #include <multiboot.h>
 #include <kmalloc.hpp>
@@ -27,7 +28,13 @@ void load_initrd(multiboot_info_t* mbd) {
     utils::Tar* tar = utils::parse_tar(start);
     while (tar != nullptr) {
         s.kprintf("File: %s\n", tar->header.filename);
-        s.kprintf("Content: %s\n", tar->data);
+        if (strcmp(tar->header.filename, "test_exec") == 0) {
+            Elf32 elf = Elf32(tar->data);
+            elf.load();
+        } else {
+            s.kprintf("Content: %s\n", tar->data);
+        }
+
         tar = tar->next;
     }
 }

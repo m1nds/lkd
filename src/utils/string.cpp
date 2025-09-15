@@ -37,3 +37,33 @@ extern "C" void *memmove(void *dst, const void *src, size_t size)
 
    return dst;
 }
+
+extern "C" int strcmp(const char *one, const char *two)
+{
+   size_t i = 0;
+   while(one[i] && one[i] == two[i]) {
+      i++;
+   }
+
+   return one[i] - two[i];
+}
+
+
+extern "C" int memcmp(const void *one, const void *two, size_t size)
+{
+   const unsigned char* c_one = reinterpret_cast<const unsigned char*>(one);
+   const unsigned char* c_two = reinterpret_cast<const unsigned char*>(two);
+
+   for (size_t i = 0; i < size; i++) {
+      if (c_one[i] < c_two[i]) {
+         return -1;
+
+      }
+
+      if (c_two[i] < c_one[i]) {
+         return 1;
+      }
+   }
+
+   return 0;
+}
