@@ -114,7 +114,7 @@ namespace pmm {
         for (uint32_t i = 1; i < this->_nbFrames; i++) {
             if (!this->_bm.get_bit(i)) {
                 this->_bm.set_bit(i);
-                return reinterpret_cast<void*>(P2V(i * FRAME_SIZE));
+                return reinterpret_cast<void*>(i * FRAME_SIZE);
             }
         }
         return nullptr;
@@ -130,4 +130,3 @@ namespace pmm {
     }
 
 }
-

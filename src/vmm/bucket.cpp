@@ -2,6 +2,7 @@
 #include <utils.hpp>
 #include <pmm.hpp>
 #include <string.hpp>
+#include <paging.hpp>
 #include <kmalloc_utils.hpp>
 
 #include <stdint.h>
@@ -11,7 +12,7 @@ Bucket* Bucket::allocate_bucket(size_t size)
     size_t page_size = 0x1000;
     size_t new_size = align(size + sizeof(Bucket), page_size);
 
-    Bucket *out = reinterpret_cast<Bucket*>(pmm::PMM::getInstance().allocate_frame());
+    Bucket *out = reinterpret_cast<Bucket*>(P2V(pmm::PMM::getInstance().allocate_frame()));
 
     if (out == nullptr)
     {

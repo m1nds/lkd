@@ -46,7 +46,7 @@ namespace idt {
             idt[i].idt_setup_entry(reinterpret_cast<uint32_t>(isr_table[i]), 0x08, 0x8e);
         }
 
-        idt[0x80].idt_setup_entry(reinterpret_cast<uint32_t>(&isr_128), 0x08, 0x8e);
+        idt[0x80].idt_setup_entry(reinterpret_cast<uint32_t>(&isr_128), 0x08, 0xEE);
 
         pic::PIC pic{};
         s.write_str("[MAIN] PIC > OK\n");

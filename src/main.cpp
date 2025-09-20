@@ -4,7 +4,7 @@
 #include <tar.hpp>
 #include <serial.hpp>
 #include <gdt.hpp>
-#include <string.h>
+#include <string.hpp>
 #include <pic.hpp>
 #include <pmm.hpp>
 #include <idt.hpp>
@@ -15,6 +15,9 @@
 
 #include <multiboot.h>
 #include <kmalloc.hpp>
+
+extern "C" void enter_userland(void);
+extern "C" void userland_entry(void);
 
 void load_initrd(multiboot_info_t* mbd) {
     serial::Serial s{};
@@ -68,9 +71,18 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     s.write_str("[MAIN] Keyboard > OK\n");
     v.write_str("[MAIN] Keyboard > OK\n");
 
-    load_initrd(mbd);
+    //load_initrd(mbd);
 
-    while (true) {
-        s.kprintf("[KEYBOARD] Write '%c'\n", keyboard::Keyboard::getchar());
-    }
+    void* userland_in_userland = reinterpret_cast<void*>(pmm::PMM::getInstance().allocate_frame());
+    void* userland_stack = reinterpret_cast<void*>(pmm::PMM::getInstance().allocate_frame());
+
+    vmm::Page& pd = vmm::Page::get_current_pd();
+    pd.map_page(reinterpret_cast<uint32_t>(userland_in_userland), 0x4000, 0x7);
+
+    pd.map_page(reinterpret_cast<uint32_t>(userland_stack), 0x8000, 0x7);
+    pd.map_page(reinterpret_cast<uint32_t>(userland_stack) - 0x1000, 0x7000, 0x7);
+
+    memcpy(reinterpret_cast<void*>(0x4000), reinterpret_cast<void*>(userland_entry), 0x100);
+
+    enter_userland();
 }

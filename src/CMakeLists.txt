@@ -40,6 +40,7 @@ target_sources(lkd PUBLIC
     devices/keyboard.cpp
 
     userland/syscalls.cpp
+    userland/enter_userland.S
 
     pmm/pmm.cpp
 )

@@ -13,6 +13,11 @@ extern "C" void isr_handler(struct interrupt_state* state) {
     if (int_num == 0x80) {
         s.kprintf("[SYSCALLS] Triggerring a syscall, %%eax = %d\n", state->eax);
         syscalls::syscall_handler(state);
+    } else if (int_num == 13) {
+        s.kprintf("[ERROR] General Protection fault\n");
+        s.kprintf("[ERROR] %%eip = %x\n", state->eip);
+        s.kprintf("[ERROR] %%ebp = %x\n", state->ebp);
+        for (;;);
     } else if (int_num == 14) {
         s.kprintf("[ERROR] Page fault\n");
         s.kprintf("[ERROR] %%eip = %x\n", state->eip);
