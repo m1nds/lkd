@@ -1,5 +1,7 @@
+//void enter_userland(void* addr);
 .global enter_userland
 enter_userland:
+    mov 4(%esp), %ebx
     mov $0x23, %ax
     mov %ax, %ds
     mov %ax, %es
@@ -11,15 +13,5 @@ enter_userland:
     push %eax
     pushf
     push $0x1b
-    push $0x4000
+    push %ebx
     iret
-
-.global userland_entry
-userland_entry:
-    mov $0x8000, %ebp
-    mov $0x8000, %esp
-    xor %eax, %eax
-    int $0x80
-loop:
-    jmp loop
-

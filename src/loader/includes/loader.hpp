@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <paging.hpp>
 
 typedef uint16_t Elf32_Half;
 typedef uint32_t Elf32_Off;
@@ -70,6 +71,18 @@ enum elf_sh_type {
     SHT_HIUSER = 0xffffffff
 };
 
+enum elf_ph_type {
+    PT_NULL = 0,
+    PT_LOAD = 1,
+    PT_DYNAMIC = 2,
+    PT_INTERP = 3,
+    PT_NOTE= 4,
+    PT_SHLIB = 5,
+    PT_PHDR = 6,
+    PT_LOPROC = 0x70000000,
+    PT_HIPROC = 0x7fffffff,
+};
+
 constexpr uint8_t ELFMAG0 = 0x7F;
 constexpr uint8_t ELFMAG1 = 'E';
 constexpr uint8_t ELFMAG2 = 'L';
@@ -120,12 +133,25 @@ typedef struct {
     Elf32_Word sh_entsize;
 } Elf32_Shdr;
 
+typedef struct {
+    Elf32_Word st_name;
+    Elf32_Addr st_value;
+    Elf32_Word st_size;
+    uint8_t st_info;
+    uint8_t st_other;
+    Elf32_Half st_shndx;
+} Elf32_Sym;
+
 class Elf32 {
     public:
         Elf32(void* elf);
-        void load();
+        void load(vmm::Page& pd);
+        void run_process();
+
     private:
+        bool verify_header();
         Elf32_Ehdr* elf_header;
+        void* entry_point;
 };
 
 #endif /* LOADER_HPP */

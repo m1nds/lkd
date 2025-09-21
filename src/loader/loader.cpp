@@ -1,22 +1,36 @@
 #include <loader.hpp>
 #include <serial.hpp>
+#include <pmm.hpp>
+#include <paging.hpp>
 #include <stdint.h>
 #include <string.h>
 
+extern "C" void enter_userland(void* addr);
+
 Elf32::Elf32(void* elf) {
     this->elf_header = reinterpret_cast<Elf32_Ehdr*>(elf);
+    this->entry_point = nullptr;
 }
 
-void Elf32::load() {
-    serial::Serial s{};
-
+bool Elf32::verify_header() {
     uint8_t elf_magic[] = { '\x7f', 'E', 'L', 'F' };
     if (memcmp(this->elf_header->e_ident, elf_magic, 4)) {
+        return false;
+    }
+
+    return true;
+}
+
+void Elf32::load(vmm::Page& pd) {
+    serial::Serial s{};
+
+    if (!this->verify_header()) {
         s.write_str("[ELF] Invalid ELF magic!\n");
         return;
     }
 
     uint8_t* elf_ptr = reinterpret_cast<uint8_t*>(this->elf_header);
+    Elf32_Ehdr* elf = reinterpret_cast<Elf32_Ehdr*>(this->elf_header);
 
     uint32_t ph_offset = this->elf_header->e_phoff;
     uint32_t ph_count = this->elf_header->e_phnum;
@@ -25,28 +39,27 @@ void Elf32::load() {
     Elf32_Phdr *current_phdr;
     for (uint32_t i = 0; i < ph_count; i++) {
         current_phdr = reinterpret_cast<Elf32_Phdr*>(elf_ptr + ph_offset + i * ph_size);
-
-        s.kprintf("=== Program Entry ===\n");
+        s.kprintf("=== Program Header ===\n");
         s.kprintf("    Type: %x\n", current_phdr->p_type);
-    }
+        s.kprintf("    Vaddr: %x\n", current_phdr->p_vaddr);
+        s.kprintf("    Paddr: %x\n", current_phdr->p_paddr);
 
-    uint32_t sh_offset = this->elf_header->e_shoff;
-    uint32_t sh_count = this->elf_header->e_shnum;
-    uint32_t sh_size = this->elf_header->e_shentsize;
-    uint32_t sh_strtable_off = this->elf_header->e_shstrndx;
+        if (current_phdr->p_type == PT_LOAD && current_phdr->p_filesz != 0) {
+            uint32_t phys_addr = reinterpret_cast<uint32_t>(pmm::PMM::getInstance().allocate_frame());
+            uint8_t* virt_addr = reinterpret_cast<uint8_t*>(current_phdr->p_vaddr);
 
-    Elf32_Shdr *current_shdr;
-    Elf32_Shdr *sh_strtable = reinterpret_cast<Elf32_Shdr*>(elf_ptr + sh_offset + sh_strtable_off * sh_size);
+            pd.map_page(phys_addr, current_phdr->p_vaddr, 0x7);
 
-    for (uint32_t i = 0; i < sh_count; i++) {
-        if (i == sh_strtable_off) {
-            continue;
+            void* curr_data = reinterpret_cast<void*>(elf_ptr + current_phdr->p_offset);
+
+            memcpy(virt_addr, curr_data, current_phdr->p_filesz);
+            //memset(virt_addr + current_phdr->p_filesz, 0, current_phdr->p_memsz - current_phdr->p_filesz);
         }
-
-        current_shdr = reinterpret_cast<Elf32_Shdr*>(elf_ptr + sh_offset + i * sh_size);
-        s.kprintf("=== Section Entry ===\n");
-        s.kprintf("    Name: %s\n", elf_ptr + sh_strtable->sh_offset + current_shdr->sh_name);
-        s.kprintf("    Type: %x\n", current_shdr->sh_type);
     }
 
+    this->entry_point = reinterpret_cast<void*>(elf->e_entry);
+}
+
+void Elf32::run_process() {
+    enter_userland(this->entry_point);
 }

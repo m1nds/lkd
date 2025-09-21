@@ -16,8 +16,7 @@
 #include <multiboot.h>
 #include <kmalloc.hpp>
 
-extern "C" void enter_userland(void);
-extern "C" void userland_entry(void);
+extern "C" void enter_userland(void* addr);
 
 void load_initrd(multiboot_info_t* mbd) {
     serial::Serial s{};
@@ -33,7 +32,8 @@ void load_initrd(multiboot_info_t* mbd) {
         s.kprintf("File: %s\n", tar->header.filename);
         if (strcmp(tar->header.filename, "test_exec") == 0) {
             Elf32 elf = Elf32(tar->data);
-            elf.load();
+            elf.load(pd);
+            elf.run_process();
         } else {
             s.kprintf("Content: %s\n", tar->data);
         }
@@ -71,18 +71,5 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     s.write_str("[MAIN] Keyboard > OK\n");
     v.write_str("[MAIN] Keyboard > OK\n");
 
-    //load_initrd(mbd);
-
-    void* userland_in_userland = reinterpret_cast<void*>(pmm::PMM::getInstance().allocate_frame());
-    void* userland_stack = reinterpret_cast<void*>(pmm::PMM::getInstance().allocate_frame());
-
-    vmm::Page& pd = vmm::Page::get_current_pd();
-    pd.map_page(reinterpret_cast<uint32_t>(userland_in_userland), 0x4000, 0x7);
-
-    pd.map_page(reinterpret_cast<uint32_t>(userland_stack), 0x8000, 0x7);
-    pd.map_page(reinterpret_cast<uint32_t>(userland_stack) - 0x1000, 0x7000, 0x7);
-
-    memcpy(reinterpret_cast<void*>(0x4000), reinterpret_cast<void*>(userland_entry), 0x100);
-
-    enter_userland();
+    load_initrd(mbd);
 }
