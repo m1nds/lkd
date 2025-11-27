@@ -2,6 +2,7 @@
 #include <string.h>
 #include <timer.hpp>
 #include <keyboard.hpp>
+#include <process.hpp>
 #include <pic.hpp>
 #include <syscalls.hpp>
 #include <interrupt_state.hpp>
@@ -31,6 +32,7 @@ extern "C" void irq_handler(struct interrupt_state* state) {
     switch (int_num) {
         case 0:
             timer::PIT::pit_interrupt_handler();
+            user::Process::switch_process(state);
             break;
         case 1:
             keyboard::Keyboard::keyboard_interrupt_handler();

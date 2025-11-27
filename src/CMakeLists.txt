@@ -41,6 +41,7 @@ target_sources(lkd PUBLIC
 
     userland/syscalls.cpp
     userland/enter_userland.S
+    userland/process.cpp
 
     pmm/pmm.cpp
 )

@@ -9,6 +9,7 @@
 #include <pmm.hpp>
 #include <idt.hpp>
 #include <paging.hpp>
+#include <process.hpp>
 #include <timer.hpp>
 #include <keyboard.hpp>
 #include <loader.hpp>
@@ -32,8 +33,10 @@ void load_initrd(multiboot_info_t* mbd) {
         s.kprintf("File: %s\n", tar->header.filename);
         if (strcmp(tar->header.filename, "test_exec") == 0) {
             Elf32 elf = Elf32(tar->data);
-            elf.load(pd);
-            elf.run_process();
+            //elf.load(pd);
+            //elf.run_process();
+            user::Process::create_process(&elf, &pd);
+            user::Process::create_process(&elf, &pd);
         } else {
             s.kprintf("Content: %s\n", tar->data);
         }
@@ -72,4 +75,6 @@ extern "C" void kmain(multiboot_info_t* mbd, uint32_t magic) {
     v.write_str("[MAIN] Keyboard > OK\n");
 
     load_initrd(mbd);
+
+    user::Process::enable_scheduling();
 }

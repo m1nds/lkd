@@ -24,6 +24,8 @@ namespace vmm {
             void map_page(uint32_t phys_addr, uint32_t virt_addr, uint32_t flags);
             PageEntry& operator[](size_t index);
             const PageEntry& operator[](size_t index) const;
+            void update_cr3();
+            Page* copy();
             uint32_t* address();
 
         private:

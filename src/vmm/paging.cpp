@@ -48,6 +48,19 @@ namespace vmm {
         return *(reinterpret_cast<Page*>(pd_addr));
     }
 
+    void Page::update_cr3() {
+        uintptr_t phys = V2P(this->address());
+        __asm__ volatile("mov %0, %%cr3" :: "r"(phys) : "memory");
+    }
+
+    Page* Page::copy() {
+        Page* new_page = reinterpret_cast<Page*>(P2V(pmm::PMM::getInstance().allocate_frame()));
+
+        memcpy(new_page, this, sizeof(Page));
+
+        return new_page;
+    }
+
     void Page::map_page(uint32_t phys_addr, uint32_t virt_addr, uint32_t flags) {
         Page& pd = *(reinterpret_cast<Page*>(P2V(this->address())));
 

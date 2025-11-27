@@ -147,11 +147,11 @@ class Elf32 {
         Elf32(void* elf);
         void load(vmm::Page& pd);
         void run_process();
+        void* entry_point;
 
     private:
         bool verify_header();
         Elf32_Ehdr* elf_header;
-        void* entry_point;
 };
 
 #endif /* LOADER_HPP */

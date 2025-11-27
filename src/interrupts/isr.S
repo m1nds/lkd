@@ -20,7 +20,6 @@ isr_common_stub:
     push %ebx
     push %ecx
     push %edx
-    push %esp
     push %ebp
     push %esi
     push %edi
@@ -32,7 +31,6 @@ isr_common_stub:
     pop %edi
     pop %esi
     pop %ebp
-    pop %esp
     pop %edx
     pop %ecx
     pop %ebx
