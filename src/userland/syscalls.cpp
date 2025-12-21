@@ -3,9 +3,9 @@
 
 namespace syscalls {
 
-    int syscall_test() {
+    int syscall_test(int val) {
         serial::Serial s{};
-        s.write_str("[DUMMY SYSCALL] This is a dummy syscall.\n");
+        s.kprintf("[DUMMY SYSCALL] Arg: %d.\n", val);
         return 0;
     }
 

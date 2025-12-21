@@ -12,12 +12,13 @@ namespace user {
             static void create_process(Elf32* elf, vmm::Page* kernel_pd);
             static void switch_process(struct interrupt_state* state);
             static void enable_scheduling();
+            vmm::Page* page_directory;
+
         private:
             struct interrupt_state regs;
             void* entrypoint;
-            vmm::Page* page_directory;
-
             Process* next;
+            uint32_t kernel_stack_top;
             static bool _init;
     };
 };

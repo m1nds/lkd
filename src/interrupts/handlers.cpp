@@ -28,6 +28,7 @@ extern "C" void isr_handler(struct interrupt_state* state) {
 }
 
 extern "C" void irq_handler(struct interrupt_state* state) {
+    serial::Serial s{};
     uint32_t int_num = state->interrupt_number;
     switch (int_num) {
         case 0:

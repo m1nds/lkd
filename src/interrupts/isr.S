@@ -16,6 +16,7 @@ isr_\num:
 .endm
 
 isr_common_stub:
+    cli
     push %eax
     push %ebx
     push %ecx
@@ -36,6 +37,7 @@ isr_common_stub:
     pop %ebx
     pop %eax
     add $8, %esp
+    sti
     iret
 
 # Defining ISRs

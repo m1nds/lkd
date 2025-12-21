@@ -9,6 +9,7 @@ irq_\num:
 .endm
 
 irq_common_stub:
+    cli
     push %eax
     push %ebx
     push %ecx
@@ -29,6 +30,7 @@ irq_common_stub:
     pop %ebx
     pop %eax
     add $8, %esp
+    sti
     iret
 
 # Defining IRQs
