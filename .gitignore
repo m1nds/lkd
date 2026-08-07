@@ -1,0 +1,6 @@
+*.efi
+*.iso
+*.img
+
+iso
+build
