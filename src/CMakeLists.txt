@@ -11,11 +11,14 @@ target_link_options(lkd PRIVATE
 )
 
 target_compile_options(lkd PRIVATE
-        $<$<COMPILE_LANGUAGE:CXX,ASM>:-target ${ARCH}-unknown-none-elf;-fshort-wchar;-mno-red-zone>
-        $<$<COMPILE_LANGUAGE:CXX>:-ffreestanding;-fno-rtti;-fno-exceptions;-fno-stack-protector>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:Debug>>:-ggdb3>
+        $<$<COMPILE_LANGUAGE:CXX,ASM>:-target ${ARCH}-unknown-none-elf;-fshort-wchar;-mno-red-zone;-O0>
+        $<$<COMPILE_LANGUAGE:CXX>:-ffreestanding;-fno-rtti;-fno-exceptions;-fno-stack-protector;-fno-threadsafe-statics>
 )
 
 target_sources(lkd PUBLIC main.cpp)
 
 add_subdirectory(arch/${ARCH})
 add_subdirectory(uart)
+add_subdirectory(memory)
+add_subdirectory(utils)

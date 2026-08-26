@@ -2,6 +2,7 @@
 set -e
 
 ARCH="${1:-x86_64}"
+BUILD="${2:-Release}"
 
 case "$ARCH" in
         x86_64)  EFI_NAME=BOOTX64.EFI ;;
@@ -10,14 +11,16 @@ case "$ARCH" in
 esac
 
 # Build Limine bootloader
-cd limine
-./bootstrap
-./configure --enable-bios --enable-bios-cd --enable-uefi-${ARCH} --enable-uefi-cd
-make
-cd ..
+if [ ! -f 'limine/bin/limine' ] ; then
+    cd limine
+    ./bootstrap
+    ./configure --enable-bios --enable-bios-cd --enable-uefi-${ARCH} --enable-uefi-cd
+    make
+    cd ..
+fi
 
 # Build the kernel
-cmake -S . -B build -DARCH="$ARCH"
+cmake -S . -B build -DARCH="$ARCH" -DCMAKE_BUILD_TYPE=${BUILD}
 cmake --build build
 
 # Copy kernel to ISO
